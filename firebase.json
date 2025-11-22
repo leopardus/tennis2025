@@ -1,0 +1,31 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "padel-time-2460d",
+          "appId": "1:218245245376:android:13087d6bca2e3fa37e0025",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "padel-time-2460d",
+          "configurations": {
+            "android": "1:218245245376:android:13087d6bca2e3fa37e0025",
+            "web": "1:218245245376:web:44d7f2e4f5287fcf7e0025",
+            "windows": "1:218245245376:web:40ba303a5db72c837e0025"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

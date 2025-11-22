@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "218245245376",
+    "project_id": "padel-time-2460d",
+    "storage_bucket": "padel-time-2460d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218245245376:android:13087d6bca2e3fa37e0025",
+        "android_client_info": {
+          "package_name": "com.example.padel_one"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFgFuEcxUliTiwIjIdWJ30crWbSFbCI2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

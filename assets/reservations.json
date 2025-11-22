@@ -1,0 +1,332 @@
+[
+  {
+    "id": "101",
+    "teren": 1,
+    "interval": [18, 20],
+    "date": "16/11/2025",
+    "person": "Andrei Popescu",
+    "isSubscription": true,
+    "subscriptionId": "AndreiPopescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "102",
+    "teren": 2,
+    "interval": [19, 20],
+    "date": "16/11/2025",
+    "person": "Cristian Dumitru",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "103",
+    "teren": 1,
+    "interval": [20, 22],
+    "date": "16/11/2025",
+    "person": "Mihai Ionescu",
+    "isSubscription": true,
+    "subscriptionId": "MihaiIonescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "104",
+    "teren": 1,
+    "interval": [10, 11],
+    "date": "17/11/2025",
+    "person": "Diana Stoica",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "105",
+    "teren": 2,
+    "interval": [17, 19],
+    "date": "17/11/2025",
+    "person": "Elena Vasilescu",
+    "isSubscription": true,
+    "subscriptionId": "ElenaVasilescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "106",
+    "teren": 1,
+    "interval": [19, 21],
+    "date": "17/11/2025",
+    "person": "Roxana Preda",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "107",
+    "teren": 2,
+    "interval": [21, 22],
+    "date": "17/11/2025",
+    "person": "Ionut Radulescu",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "108",
+    "teren": 1,
+    "interval": [18, 20],
+    "date": "18/11/2025",
+    "person": "Stefan Georgescu",
+    "isSubscription": true,
+    "subscriptionId": "StefanGeorgescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "109",
+    "teren": 2,
+    "interval": [20, 21],
+    "date": "18/11/2025",
+    "person": "Laura Constantinescu",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "110",
+    "teren": 1,
+    "interval": [9, 11],
+    "date": "19/11/2025",
+    "person": "Ana Maria Tudor",
+    "isSubscription": true,
+    "subscriptionId": "AnaMariaTudor",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "111",
+    "teren": 2,
+    "interval": [12, 13],
+    "date": "19/11/2025",
+    "person": "Diana Stoica",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "112",
+    "teren": 1,
+    "interval": [18, 19],
+    "date": "19/11/2025",
+    "person": "Cristian Dumitru",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "113",
+    "teren": 2,
+    "interval": [19, 21],
+    "date": "19/11/2025",
+    "person": "Andrei Popescu",
+    "isSubscription": true,
+    "subscriptionId": "AndreiPopescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "114",
+    "teren": 1,
+    "interval": [21, 22],
+    "date": "19/11/2025",
+    "person": "Mihai Ionescu",
+    "isSubscription": true,
+    "subscriptionId": "MihaiIonescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "115",
+    "teren": 1,
+    "interval": [17, 18],
+    "date": "20/11/2025",
+    "person": "Roxana Preda",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "116",
+    "teren": 2,
+    "interval": [18, 20],
+    "date": "20/11/2025",
+    "person": "Elena Vasilescu",
+    "isSubscription": true,
+    "subscriptionId": "ElenaVasilescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "117",
+    "teren": 1,
+    "interval": [20, 21],
+    "date": "20/11/2025",
+    "person": "Ionut Radulescu",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "118",
+    "teren": 2,
+    "interval": [21, 22],
+    "date": "20/11/2025",
+    "person": "Stefan Georgescu",
+    "isSubscription": true,
+    "subscriptionId": "StefanGeorgescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "119",
+    "teren": 1,
+    "interval": [16, 17],
+    "date": "21/11/2025",
+    "person": "Laura Constantinescu",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "120",
+    "teren": 2,
+    "interval": [17, 19],
+    "date": "21/11/2025",
+    "person": "Ana Maria Tudor",
+    "isSubscription": true,
+    "subscriptionId": "AnaMariaTudor",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "121",
+    "teren": 1,
+    "interval": [19, 20],
+    "date": "21/11/2025",
+    "person": "Diana Stoica",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "122",
+    "teren": 2,
+    "interval": [20, 22],
+    "date": "21/11/2025",
+    "person": "Cristian Dumitru",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "123",
+    "teren": 1,
+    "interval": [18, 20],
+    "date": "22/11/2025",
+    "person": "Andrei Popescu",
+    "isSubscription": true,
+    "subscriptionId": "AndreiPopescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "124",
+    "teren": 2,
+    "interval": [19, 21],
+    "date": "22/11/2025",
+    "person": "Mihai Ionescu",
+    "isSubscription": true,
+    "subscriptionId": "MihaiIonescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "125",
+    "teren": 1,
+    "interval": [21, 22],
+    "date": "22/11/2025",
+    "person": "Roxana Preda",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "201",
+    "teren": 2,
+    "interval": [18, 19],
+    "date": "23/11/2025",
+    "person": "Stefan Georgescu",
+    "isSubscription": true,
+    "subscriptionId": "StefanGeorgescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "202",
+    "teren": 1,
+    "interval": [19, 21],
+    "date": "23/11/2025",
+    "person": "Roxana Preda",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "203",
+    "teren": 2,
+    "interval": [21, 22],
+    "date": "24/11/2025",
+    "person": "Laura Constantinescu",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "204",
+    "teren": 1,
+    "interval": [8, 10],
+    "date": "24/11/2025",
+    "person": "Ionut Radulescu",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "205",
+    "teren": 2,
+    "interval": [10, 12],
+    "date": "24/11/2025",
+    "person": "Diana Stoica",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "206",
+    "teren": 1,
+    "interval": [17, 19],
+    "date": "24/11/2025",
+    "person": "Elena Vasilescu",
+    "isSubscription": true,
+    "subscriptionId": "ElenaVasilescu",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  },
+  {
+    "id": "207",
+    "teren": 2,
+    "interval": [19, 20],
+    "date": "25/11/2025",
+    "person": "Cristian Dumitru",
+    "isSubscription": false,
+    "subscriptionId": null,
+    "subscriptionEndDate": null
+  },
+  {
+    "id": "208",
+    "teren": 1,
+    "interval": [20, 22],
+    "date": "25/11/2025",
+    "person": "Ana Maria Tudor",
+    "isSubscription": true,
+    "subscriptionId": "AnaMariaTudor",
+    "subscriptionEndDate": "2026-02-20T00:00:00.000"
+  }
+]
