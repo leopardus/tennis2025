@@ -5,19 +5,19 @@ import 'package:intl/intl.dart';
 import 'package:padel_one/app_styles.dart';
 import 'package:padel_one/auth_service.dart';
 import 'package:padel_one/login_page.dart';
-import 'package:padel_one/padel_time_ux_page.dart';
+import 'package:padel_one/padel_time_page.dart';
 import 'package:padel_one/reports_page.dart';
-import 'package:padel_one/time_slot_table.dart';
+import 'package:padel_one/time_slot_table_ux.dart'; // Use the new UX table
 import 'package:provider/provider.dart';
 
-class PadelTimePage extends StatefulWidget {
-  const PadelTimePage({super.key});
+class PadelTimeUxPage extends StatefulWidget {
+  const PadelTimeUxPage({super.key});
 
   @override
-  State<PadelTimePage> createState() => _PadelTimePageState();
+  State<PadelTimeUxPage> createState() => _PadelTimeUxPageState();
 }
 
-class _PadelTimePageState extends State<PadelTimePage> {
+class _PadelTimeUxPageState extends State<PadelTimeUxPage> {
   final CarouselSliderController _carouselController = CarouselSliderController();
   int _currentPageIndex = 3; // Start with the current day selected
 
@@ -33,7 +33,7 @@ class _PadelTimePageState extends State<PadelTimePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
-          backgroundColor: AppStyles.pageBackground,
+          backgroundColor: AppStyles.uxPageBackground, // Use UX background
           appBar: _ResponsiveAppBar(
             width: constraints.maxWidth,
             date: days[_currentPageIndex],
@@ -67,18 +67,18 @@ class _PadelTimePageState extends State<PadelTimePage> {
                       leading: const Icon(Icons.calendar_today, color: AppStyles.drawerIconColor),
                       title: const Text('Programari', style: TextStyle(color: AppStyles.drawerIconColor)),
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context); // Close the drawer
+                        Navigator.pushReplacement( // Go back to the original page
+                          context,
+                          MaterialPageRoute(builder: (context) => const PadelTimePage()),
+                        );
                       },
                     ),
                     ListTile(
                       leading: const Icon(Icons.design_services, color: AppStyles.drawerIconColor),
                       title: const Text('Programari UX', style: TextStyle(color: AppStyles.drawerIconColor)),
                       onTap: () {
-                        Navigator.pop(context); // Close the drawer
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const PadelTimeUxPage()),
-                        );
+                        Navigator.pop(context); // Already on this page, just close drawer
                       },
                     ),
                     ListTile(
@@ -141,8 +141,8 @@ class _PadelTimePageState extends State<PadelTimePage> {
                       builder: (BuildContext context) {
                         return Container(
                           width: MediaQuery.of(context).size.width,
-                          color: AppStyles.cardBackground, // Keep background color
-                          child: TimeSlotTable(date: date),
+                          color: AppStyles.uxCardBackground, // Use UX background
+                          child: TimeSlotTableUx(date: date), // Use the new UX table
                         );
                       },
                     );

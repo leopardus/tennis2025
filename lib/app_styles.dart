@@ -36,6 +36,25 @@ class AppStyles {
   static const Color chartAreaColor = Color(0xFFE0E0E0); // Light grey for area
   static const double reportsChartLineWidth = 2.0;
 
+  // --- Drawer Theme ---
+  static const Color drawerHeaderBackground = Color(0xFF424242); // Colors.grey[800]
+  static const Color drawerTextColor = Colors.white;
+  static const Color drawerIconColor = Color(0xFF757575); // Colors.grey[600]
+
+  // --- UX Blue Theme ---
+  static const Color uxPageBackground = Color(0xFFE3F2FD); // Colors.blue[50]
+  static const Color uxCardBackground = Colors.white;
+  static const Color uxHeaderBackground = Color(0xFF90CAF9); // Colors.blue[200]
+  static const Color uxPrimaryText = Color(0xFF0D47A1); // Colors.blue[900]
+  static const Color uxSecondaryText = Color(0xFF1565C0); // Colors.blue[800]
+  static const Color uxDividerColor = Color(0xFFBBDEFB); // Colors.blue[100]
+  static const Color uxReservationColor = Color(0xFFE3F2FD); // Very light blue (Colors.blue[50])
+  static const Color uxSubscriptionColor = Color(0xFFBBDEFB); // Light blue (Colors.blue[100])
+  static const Color uxReservationCardBorder = Color(0xFF1976D2); // Darker blue (Colors.blue[700])
+  static const double uxReservationCardBorderWidth = 1.0;
+  static const double uxReservationCardCornerRadius = 2.0;
+  static const Color uxAvailableTextColor = Color(0xFFE0F2F7); // Very light blue, almost invisible
+
   // --- Text Styles ---
 
   // Font Sizes
