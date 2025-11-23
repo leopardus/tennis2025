@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:padel_one/app_styles.dart';
+import 'package:padel_one/app_theme.dart';
 import 'package:padel_one/auth_service.dart';
 import 'package:padel_one/firebase_options.dart';
 import 'package:padel_one/padel_time_page.dart';
@@ -15,8 +16,11 @@ void main() async {
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => AppTheme()),
+      ],
       child: const MyApp(),
     ),
   );

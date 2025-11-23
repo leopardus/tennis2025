@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:padel_one/app_styles.dart';
+import 'package:padel_one/app_theme.dart';
 import 'package:padel_one/reservation_form.dart';
+import 'package:provider/provider.dart';
 
 // This list will be populated from the JSON file.
 // It remains a global variable to be accessible from the reports page.
@@ -139,6 +141,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
   }
 
   void _showReservationDetails(BuildContext context, dynamic reservation) {
+    final theme = Provider.of<AppTheme>(context, listen: false);
     final start = (reservation['interval'][0] as num).toDouble();
     final end = (reservation['interval'][1] as num).toDouble();
 
@@ -153,9 +156,9 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
           titlePadding: const EdgeInsets.fromLTRB(24, 10, 12, 0),
           title: Stack(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 14.0),
-                child: Text('Detalii rezervare', style: TextStyle(color: AppStyles.uxPrimaryText, fontWeight: FontWeight.bold)),
+              Padding(
+                padding: const EdgeInsets.only(top: 14.0),
+                child: Text('Detalii rezervare', style: TextStyle(color: theme.uxPrimaryText, fontWeight: FontWeight.bold)),
               ),
               Positioned(
                 top: -10,
@@ -174,24 +177,24 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Persoana: ${reservation['person']}', style: const TextStyle(color: AppStyles.uxPrimaryText)),
-              Text('Teren: ${reservation['teren']}', style: const TextStyle(color: AppStyles.uxPrimaryText)),
+              Text('Persoana: ${reservation['person']}', style: TextStyle(color: theme.uxPrimaryText)),
+              Text('Teren: ${reservation['teren']}', style: TextStyle(color: theme.uxPrimaryText)),
               Text(
-                  'Interval: ${_formatHour(start)} - ${_formatHour(end)}', style: const TextStyle(color: AppStyles.uxPrimaryText)),
+                  'Interval: ${_formatHour(start)} - ${_formatHour(end)}', style: TextStyle(color: theme.uxPrimaryText)),
               if (reservation['isSubscription'] == true)
-                const Text('Tipul: Abonament', style: TextStyle(color: AppStyles.uxPrimaryText)),
+                Text('Tipul: Abonament', style: TextStyle(color: theme.uxPrimaryText)),
             ],
           ),
           actions: [
             TextButton(
-              style: TextButton.styleFrom(foregroundColor: AppStyles.uxPrimaryText),
+              style: TextButton.styleFrom(foregroundColor: theme.uxPrimaryText),
               child: const Text('Inchide'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              style: TextButton.styleFrom(foregroundColor: AppStyles.uxPrimaryText),
+              style: TextButton.styleFrom(foregroundColor: theme.uxPrimaryText),
               child: const Text('Editare'),
               onPressed: () {
                 Navigator.of(context).pop(); // Close details dialog
@@ -309,6 +312,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<AppTheme>(context);
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -323,11 +327,11 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
               padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
 
-              child: const Row(
+              child: Row(
 
                 children: [
 
-                                    SizedBox(width: 70.0, child: Center(child: Text('Ora', style: TextStyle(color: AppStyles.uxPrimaryText)))), // Fixed width for hour column header
+                                    SizedBox(width: 70.0, child: Center(child: Text('Ora', style: TextStyle(color: theme.uxPrimaryText)))), // Fixed width for hour column header
 
                                     Expanded(
 
@@ -335,7 +339,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
                                         child: Center(
 
-                                            child: Text('Teren 1', style: TextStyle(color: AppStyles.uxPrimaryText)))),
+                                            child: Text('Teren 1', style: TextStyle(color: theme.uxPrimaryText)))),
 
                                     Expanded(
 
@@ -343,7 +347,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
                                         child: Center(
 
-                                            child: Text('Teren 2', style: TextStyle(color: AppStyles.uxPrimaryText)))),
+                                            child: Text('Teren 2', style: TextStyle(color: theme.uxPrimaryText)))),
 
                                   ],
 
@@ -416,7 +420,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
                 child: Text(
 
                   'Total Ore Rezervate Azi: ${_totalHoursReservedToday.toStringAsFixed(1)}',
-                  style: const TextStyle(color: AppStyles.uxPrimaryText, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: theme.uxPrimaryText, fontWeight: FontWeight.bold),
 
                 ),
 
@@ -470,7 +474,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
     
 
       Widget _buildCourtColumn(int courtNum, List<Map<String, dynamic>> reservations) {
-
+        final theme = Provider.of<AppTheme>(context);
         return Stack(
 
           children: [
@@ -528,9 +532,9 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
                       color: res['isSubscription'] == true
 
-                          ? AppStyles.uxSubscriptionColor
+                          ? theme.uxSubscriptionColor
 
-                          : AppStyles.uxReservationColor,
+                          : theme.uxReservationColor,
 
                       borderRadius: BorderRadius.circular(AppStyles.uxReservationCardCornerRadius),
 
@@ -546,7 +550,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
                     child: Center(
                       child: Text(
                         _getReservationDisplayText(res),
-                        style: const TextStyle(color: AppStyles.uxPrimaryText, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: theme.uxPrimaryText, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -588,8 +592,6 @@ class _HourLinePainter extends CustomPainter {
       // Draw main hour circle
       final currentY = i * rowHeight + 12.0; 
       canvas.drawCircle(Offset(lineX, currentY), 2.5, circlePaint);
-
-      // Draw half-hour tick - REMOVED
 
       // Draw a line to the next hour mark
       if (i < hourCount - 1) {

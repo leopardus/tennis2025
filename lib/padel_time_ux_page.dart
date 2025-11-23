@@ -3,10 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:carousel_slider/carousel_controller.dart' as carousel_slider_controller;
 import 'package:intl/intl.dart';
 import 'package:padel_one/app_styles.dart';
+import 'package:padel_one/app_theme.dart';
 import 'package:padel_one/auth_service.dart';
 import 'package:padel_one/login_page.dart';
 import 'package:padel_one/padel_time_page.dart';
 import 'package:padel_one/reports_page.dart';
+import 'package:padel_one/settings_page.dart';
 import 'package:padel_one/time_slot_table_ux.dart'; // Use the new UX table
 import 'package:provider/provider.dart';
 
@@ -30,10 +32,11 @@ class _PadelTimeUxPageState extends State<PadelTimeUxPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<AppTheme>(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
-          backgroundColor: AppStyles.uxPageBackground, // Use UX background
+          backgroundColor: theme.uxPageBackground, // Use UX background from theme
           appBar: _ResponsiveAppBar(
             width: constraints.maxWidth,
             date: days[_currentPageIndex],
@@ -89,6 +92,17 @@ class _PadelTimeUxPageState extends State<PadelTimeUxPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const ReportsPage()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.settings, color: AppStyles.drawerIconColor),
+                      title: const Text('Setari', style: TextStyle(color: AppStyles.drawerIconColor)),
+                      onTap: () {
+                        Navigator.pop(context); // Close the drawer
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SettingsPage()),
                         );
                       },
                     ),

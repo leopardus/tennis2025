@@ -7,6 +7,7 @@ import 'package:padel_one/auth_service.dart';
 import 'package:padel_one/login_page.dart';
 import 'package:padel_one/padel_time_ux_page.dart';
 import 'package:padel_one/reports_page.dart';
+import 'package:padel_one/settings_page.dart';
 import 'package:padel_one/time_slot_table.dart';
 import 'package:provider/provider.dart';
 
@@ -89,6 +90,17 @@ class _PadelTimePageState extends State<PadelTimePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const ReportsPage()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.settings, color: AppStyles.drawerIconColor),
+                      title: const Text('Setari', style: TextStyle(color: AppStyles.drawerIconColor)),
+                      onTap: () {
+                        Navigator.pop(context); // Close the drawer
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const SettingsPage()),
                         );
                       },
                     ),
@@ -180,7 +192,7 @@ class _ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
-              'Padel Time 2',
+              'Padel Time',
               style: TextStyle(fontSize: AppStyles.fontSizeLarge, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8), // Increased spacing
