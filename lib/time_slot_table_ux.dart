@@ -443,7 +443,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
                       right: BorderSide(color: AppStyles.uxDividerColor),
                     ),
                   ),
-                  padding: const EdgeInsets.all(4.0),
+                  padding: const EdgeInsets.only(left: 24.0, top: 4.0, right: 4.0, bottom: 4.0), // Adjusted padding
                   alignment: Alignment.topLeft,
                   child: Text(
                     DateFormat('HH:mm').format(DateTime(2024, 1, 1, hour)), // Changed format
@@ -574,7 +574,7 @@ class _HourLinePainter extends CustomPainter {
       ..strokeWidth = 1.5; // Added strokeWidth for the circle
 
     // Position the line near the right border, leaving space for the text on the left.
-    final double lineX = size.width - 48.0; // Adjusted lineX
+    final double lineX = 12.0; // Adjusted lineX to the left
 
     for (int i = 0; i < hourCount; i++) {
       // Adjusted currentY to align with the center of the hour text
