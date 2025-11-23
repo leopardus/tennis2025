@@ -327,7 +327,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
                 children: [
 
-                                    SizedBox(width: 100.0, child: Center(child: Text('Ora', style: TextStyle(color: AppStyles.uxPrimaryText)))), // Fixed width for hour column header
+                                    SizedBox(width: 70.0, child: Center(child: Text('Ora', style: TextStyle(color: AppStyles.uxPrimaryText)))), // Fixed width for hour column header
 
                                     Expanded(
 
@@ -361,7 +361,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
                                     children: [
 
-                                      SizedBox(width: 100.0, child: _buildHourColumn()), // Hour column with fixed width
+                                      SizedBox(width: 70.0, child: _buildHourColumn()), // Hour column with fixed width
 
                                         Expanded(
 
@@ -437,7 +437,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
         return Stack(
           children: [
             CustomPaint(
-              size: Size(100.0, _hourCount * _rowHeight),
+              size: Size(70.0, _hourCount * _rowHeight),
               painter: _HourLinePainter(
                 hourCount: _hourCount,
                 rowHeight: _rowHeight,
@@ -589,11 +589,7 @@ class _HourLinePainter extends CustomPainter {
       final currentY = i * rowHeight + 12.0; 
       canvas.drawCircle(Offset(lineX, currentY), 2.5, circlePaint);
 
-      // Draw half-hour tick
-      final halfHourY = currentY + (rowHeight / 2);
-      if (halfHourY < size.height) {
-        canvas.drawLine(Offset(lineX - 2, halfHourY), Offset(lineX + 2, halfHourY), linePaint);
-      }
+      // Draw half-hour tick - REMOVED
 
       // Draw a line to the next hour mark
       if (i < hourCount - 1) {

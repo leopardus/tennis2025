@@ -180,7 +180,7 @@ class _ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
-              'Padel Time',
+              'Padel Time 2',
               style: TextStyle(fontSize: AppStyles.fontSizeLarge, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8), // Increased spacing

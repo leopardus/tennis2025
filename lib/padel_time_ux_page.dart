@@ -179,11 +179,16 @@ class _ResponsiveAppBar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 10), // Increased spacing
             const Text(
               'Padel Time',
-              style: TextStyle(fontSize: AppStyles.fontSizeLarge, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: AppStyles.fontSizeLarge,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 8), // Increased spacing
+            
+            const SizedBox(height: 0), // Increased spacing
             Text(
               DateFormat('EEEE, MMMM d', 'ro_RO').format(date),
               style: const TextStyle(fontSize: AppStyles.fontSizeNormal), // Increased font size

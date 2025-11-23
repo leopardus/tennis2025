@@ -50,7 +50,7 @@ class AppStyles {
   static const Color uxDividerColor = Color(0xFFBBDEFB); // Colors.blue[100]
   static const Color uxReservationColor = Color(0xFFE3F2FD); // Very light blue (Colors.blue[50])
   static const Color uxSubscriptionColor = Color(0xFFBBDEFB); // Light blue (Colors.blue[100])
-  static const Color uxReservationCardBorder = Color(0xFF1976D2); // Darker blue (Colors.blue[700])
+  static const Color uxReservationCardBorder = Color(0xFFBBDEFB); // Paler blue (Colors.blue[100])
   static const double uxReservationCardBorderWidth = 1.0;
   static const double uxReservationCardCornerRadius = 2.0;
   static const Color uxAvailableTextColor = Color(0xFFE0F2F7); // Very light blue, almost invisible
