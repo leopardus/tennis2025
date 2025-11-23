@@ -4,7 +4,7 @@ import 'package:padel_one/app_styles.dart';
 
 class ReservationForm extends StatefulWidget {
   // For creating a new reservation
-  final int? initialHour;
+  final double? initialHour; // Changed to double
   final int? initialTeren;
   final DateTime? date;
 
@@ -27,8 +27,8 @@ class ReservationForm extends StatefulWidget {
 
 class _ReservationFormState extends State<ReservationForm> {
   final _formKey = GlobalKey<FormState>();
-  late int _startHour;
-  late int _endHour;
+  late double _startHour; // Changed to double
+  late double _endHour;   // Changed to double
   late int _teren;
   late String _personName;
   late TextEditingController _nameController;
@@ -37,15 +37,16 @@ class _ReservationFormState extends State<ReservationForm> {
 
   bool get isEditing => widget.initialReservation != null;
 
-  final List<int> availableHours = List.generate(16, (index) => 8 + index);
+  // Generate time slots from 8:00 to 23:30
+  final List<double> availableTimes = List.generate(32, (index) => 8.0 + index * 0.5);
 
   @override
   void initState() {
     super.initState();
     if (isEditing) {
       final reservation = widget.initialReservation!;
-      _startHour = reservation['interval'][0];
-      _endHour = reservation['interval'][1];
+      _startHour = (reservation['interval'][0] as num).toDouble();
+      _endHour = (reservation['interval'][1] as num).toDouble();
       _teren = reservation['teren'];
       _personName = reservation['person'];
       _isSubscription = reservation['isSubscription'] ?? false;
@@ -54,7 +55,7 @@ class _ReservationFormState extends State<ReservationForm> {
           : null;
     } else {
       _startHour = widget.initialHour!;
-      _endHour = widget.initialHour! + 1;
+      _endHour = widget.initialHour! + 1.0; // Default to 1-hour reservation
       _teren = widget.initialTeren!;
       _personName = '';
       _isSubscription = false;
@@ -66,6 +67,12 @@ class _ReservationFormState extends State<ReservationForm> {
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  String _formatHour(double hour) {
+    final int h = hour.floor();
+    final int m = ((hour - h) * 60).round();
+    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}';
   }
 
   Future<void> _selectEndDate(BuildContext context) async {
@@ -147,31 +154,28 @@ class _ReservationFormState extends State<ReservationForm> {
                 },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<int>(
+              DropdownButtonFormField<double>(
                 value: _startHour,
                 decoration: const InputDecoration(labelText: 'Ora inceput'),
-                items: availableHours.map((hour) {
-                  return DropdownMenuItem(value: hour, child: Text('$hour:00'));
+                items: availableTimes.where((time) => time < 23.5).map((hour) { // Cannot start at 23:30 for a 30-min slot
+                  return DropdownMenuItem(value: hour, child: Text(_formatHour(hour)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
                     _startHour = value!;
                     if (_startHour >= _endHour) {
-                      _endHour = _startHour + 1;
+                      _endHour = _startHour + 0.5;
                     }
                   });
                 },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<int>(
+              DropdownButtonFormField<double>(
                 value: _endHour,
                 decoration: const InputDecoration(labelText: 'Ora sfarsit'),
-                items: availableHours
-                    .map((hour) => hour + 1)
-                    .where((hour) => hour <= 24)
-                    .map((hour) {
+                items: availableTimes.where((time) => time > 8.0).map((hour) {
                   return DropdownMenuItem(
-                      value: hour, child: Text('$hour:00'));
+                      value: hour, child: Text(_formatHour(hour)));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {

@@ -21,11 +21,11 @@ class TimeSlotTableUx extends StatefulWidget {
 class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
   List<Map<String, dynamic>> _reservationsForDayTeren1 = [];
   List<Map<String, dynamic>> _reservationsForDayTeren2 = [];
-  int _totalHoursReservedToday = 0;
+  double _totalHoursReservedToday = 0; // Changed to double
   bool _isLoading = true;
   static bool _isDataLoaded = false;
 
-  static const double _rowHeight = 40.0;
+  static const double _rowHeight = 40.0; // Represents 1 hour
   static const int _startHour = 8;
   static const int _endHour = 23;
   static const int _hourCount = _endHour - _startHour + 1;
@@ -74,12 +74,15 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
         .where((res) => res['date'] == formattedDate)
         .toList();
 
-    int totalHours = 0;
+    double totalHours = 0; // Changed to double
     final countedIds = <String>{};
 
     for (var res in todayReservations) {
       if (!countedIds.contains(res['id'])) {
-        totalHours += (res['interval'][1] - res['interval'][0]) as int;
+        // Handle both int and double from JSON
+        final start = (res['interval'][0] as num).toDouble();
+        final end = (res['interval'][1] as num).toDouble();
+        totalHours += (end - start);
         countedIds.add(res['id']);
       }
     }
@@ -129,7 +132,16 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
     );
   }
 
+  String _formatHour(double hour) {
+    final int h = hour.floor();
+    final int m = ((hour - h) * 60).round();
+    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}';
+  }
+
   void _showReservationDetails(BuildContext context, dynamic reservation) {
+    final start = (reservation['interval'][0] as num).toDouble();
+    final end = (reservation['interval'][1] as num).toDouble();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -165,7 +177,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
               Text('Persoana: ${reservation['person']}', style: const TextStyle(color: AppStyles.uxPrimaryText)),
               Text('Teren: ${reservation['teren']}', style: const TextStyle(color: AppStyles.uxPrimaryText)),
               Text(
-                  'Interval: ${reservation['interval'][0]}:00 - ${reservation['interval'][1]}:00', style: const TextStyle(color: AppStyles.uxPrimaryText)),
+                  'Interval: ${_formatHour(start)} - ${_formatHour(end)}', style: const TextStyle(color: AppStyles.uxPrimaryText)),
               if (reservation['isSubscription'] == true)
                 const Text('Tipul: Abonament', style: TextStyle(color: AppStyles.uxPrimaryText)),
             ],
@@ -193,7 +205,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
     );
   }
 
-  void _navigateToReservationForm(int hour, int teren, {bool isEditing = false, Map<String, dynamic>? reservation}) async {
+  void _navigateToReservationForm(double hour, int teren, {bool isEditing = false, Map<String, dynamic>? reservation}) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -246,15 +258,15 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
       // --- Conflict Check for all reservations to be added ---
       for (final newRes in reservationsToAdd) {
-        final int start = newRes['interval'][0];
-        final int end = newRes['interval'][1];
+        final double start = (newRes['interval'][0] as num).toDouble();
+        final double end = (newRes['interval'][1] as num).toDouble();
         final int court = newRes['teren'];
         final String date = newRes['date'];
 
         for (final existingRes in mockReservations) {
           if (existingRes['date'] == date && existingRes['teren'] == court) {
-            final int existingStart = existingRes['interval'][0];
-            final int existingEnd = existingRes['interval'][1];
+            final double existingStart = (existingRes['interval'][0] as num).toDouble();
+            final double existingEnd = (existingRes['interval'][1] as num).toDouble();
             if (start < existingEnd && end > existingStart) {
               conflictFound = true;
               conflictDate = date;
@@ -403,8 +415,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
                 child: Text(
 
-                  'Total Ore Rezervate Azi: $_totalHoursReservedToday',
-
+                  'Total Ore Rezervate Azi: ${_totalHoursReservedToday.toStringAsFixed(1)}',
                   style: const TextStyle(color: AppStyles.uxPrimaryText, fontWeight: FontWeight.bold),
 
                 ),
@@ -471,13 +482,12 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
               child: GestureDetector(
 
                 onTapDown: (details) {
-
                   final double y = details.localPosition.dy;
-
-                  final int hour = _startHour + (y / _rowHeight).floor();
-
-                  _navigateToReservationForm(hour, courtNum);
-
+                  // Calculate the hour with 30-min precision
+                  final double hour = _startHour + (y / _rowHeight);
+                  // Round to the nearest half hour
+                  final double slot = (hour * 2).round() / 2;
+                  _navigateToReservationForm(slot, courtNum);
                 },
 
                 child: Container(color: Colors.transparent), // Transparent background to capture taps
@@ -489,13 +499,11 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
             // --- Reservation cards ---
 
             ...reservations.map((res) {
+              // Handle both int and double from JSON
+              final double start = (res['interval'][0] as num).toDouble();
+              final double end = (res['interval'][1] as num).toDouble();
 
-              final int start = res['interval'][0];
-
-              final int end = res['interval'][1];
-
-              final double top = (start - _startHour) * _rowHeight;
-
+              final double top = (start - _startHour) * _rowHeight + 5.0; // Adjusted top position
               final double height = (end - start) * _rowHeight;
 
     
@@ -577,11 +585,15 @@ class _HourLinePainter extends CustomPainter {
     final double lineX = 12.0; // Adjusted lineX to the left
 
     for (int i = 0; i < hourCount; i++) {
-      // Adjusted currentY to align with the center of the hour text
+      // Draw main hour circle
       final currentY = i * rowHeight + 12.0; 
-
-      // Draw a circle at each hour mark
       canvas.drawCircle(Offset(lineX, currentY), 2.5, circlePaint);
+
+      // Draw half-hour tick
+      final halfHourY = currentY + (rowHeight / 2);
+      if (halfHourY < size.height) {
+        canvas.drawLine(Offset(lineX - 2, halfHourY), Offset(lineX + 2, halfHourY), linePaint);
+      }
 
       // Draw a line to the next hour mark
       if (i < hourCount - 1) {

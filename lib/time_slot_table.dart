@@ -19,9 +19,9 @@ class TimeSlotTable extends StatefulWidget {
 }
 
 class _TimeSlotTableState extends State<TimeSlotTable> {
-  Map<int, dynamic> _reservationsTeren1 = {};
-  Map<int, dynamic> _reservationsTeren2 = {};
-  int _totalHoursReservedToday = 0;
+  Map<double, dynamic> _reservationsTeren1 = {}; // Changed to Map<double, dynamic>
+  Map<double, dynamic> _reservationsTeren2 = {}; // Changed to Map<double, dynamic>
+  double _totalHoursReservedToday = 0; // Changed to double
   bool _isLoading = true;
   static bool _isDataLoaded = false;
 
@@ -64,18 +64,17 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
   }
 
   void _processReservationsForDate() {
-    final Map<int, dynamic> teren1Reservations = {};
-    final Map<int, dynamic> teren2Reservations = {};
+    final Map<double, dynamic> teren1Reservations = {};
+    final Map<double, dynamic> teren2Reservations = {};
     final String formattedDate = DateFormat('dd/MM/yyyy').format(widget.date);
-    int totalHours = 0;
+    double totalHours = 0;
     final countedIds = <String>{};
 
     for (var reservation in mockReservations) {
       if (reservation['date'] == formattedDate) {
         final int teren = reservation['teren'];
-        final List<dynamic> interval = reservation['interval'];
-        final int startHour = interval[0];
-        final int endHour = interval[1];
+        final double startHour = (reservation['interval'][0] as num).toDouble();
+        final double endHour = (reservation['interval'][1] as num).toDouble();
 
         // Calculate total hours
         if (!countedIds.contains(reservation['id'])) {
@@ -83,7 +82,7 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
           countedIds.add(reservation['id']);
         }
 
-        for (int i = startHour; i < endHour; i++) {
+        for (double i = startHour; i < endHour; i += 0.5) {
           if (teren == 1) {
             teren1Reservations[i] = reservation;
           } else if (teren == 2) {
@@ -138,7 +137,16 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
     );
   }
 
+  String _formatHour(double hour) {
+    final int h = hour.floor();
+    final int m = ((hour - h) * 60).round();
+    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}';
+  }
+
   void _showReservationDetails(BuildContext context, dynamic reservation) {
+    final double start = (reservation['interval'][0] as num).toDouble();
+    final double end = (reservation['interval'][1] as num).toDouble();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -173,8 +181,7 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
             children: [
               Text('Persoana: ${reservation['person']}'),
               Text('Teren: ${reservation['teren']}'),
-              Text(
-                  'Interval: ${reservation['interval'][0]}:00 - ${reservation['interval'][1]}:00'),
+              Text('Interval: ${_formatHour(start)} - ${_formatHour(end)}'),
               if (reservation['isSubscription'] == true)
                 const Text('Tipul: Abonament'),
             ],
@@ -202,7 +209,7 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
     );
   }
 
-  void _navigateToReservationForm(int hour, int teren, {bool isEditing = false, Map<String, dynamic>? reservation}) async {
+  void _navigateToReservationForm(double hour, int teren, {bool isEditing = false, Map<String, dynamic>? reservation}) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -255,15 +262,15 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
 
       // --- Conflict Check for all reservations to be added ---
       for (final newRes in reservationsToAdd) {
-        final int start = newRes['interval'][0];
-        final int end = newRes['interval'][1];
+        final double start = (newRes['interval'][0] as num).toDouble();
+        final double end = (newRes['interval'][1] as num).toDouble();
         final int court = newRes['teren'];
         final String date = newRes['date'];
 
         for (final existingRes in mockReservations) {
           if (existingRes['date'] == date && existingRes['teren'] == court) {
-            final int existingStart = existingRes['interval'][0];
-            final int existingEnd = existingRes['interval'][1];
+            final double existingStart = (existingRes['interval'][0] as num).toDouble();
+            final double existingEnd = (existingRes['interval'][1] as num).toDouble();
             if (start < existingEnd && end > existingStart) {
               conflictFound = true;
               conflictDate = date;
@@ -345,23 +352,24 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
               Container(color: AppStyles.darkText),
               ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: 16,
+                itemCount: 32, // 16 hours * 2 slots/hour
                 itemBuilder: (context, index) {
-                  final hour = 8 + index;
+                  final double hour = 8.0 + index * 0.5;
 
                   final dynamic reservationTeren1 = _reservationsTeren1[hour];
                   final bool isOccupiedTeren1 = reservationTeren1 != null;
                   final bool isFirstOccupiedTeren1 = isOccupiedTeren1 &&
-                      (_reservationsTeren1[hour - 1]?['id'] !=
+                      (_reservationsTeren1[hour - 0.5]?['id'] !=
                           reservationTeren1['id']);
                   
                   final dynamic reservationTeren2 = _reservationsTeren2[hour];
                   final bool isOccupiedTeren2 = reservationTeren2 != null;
                   final bool isFirstOccupiedTeren2 = isOccupiedTeren2 &&
-                      (_reservationsTeren2[hour - 1]?['id'] !=
+                      (_reservationsTeren2[hour - 0.5]?['id'] !=
                           reservationTeren2['id']);
 
                   return Container(
+                    height: 20, // Half the original row height
                     color: AppStyles.cardBackground, // Each row has its own background
                     child: Row(
                       children: [
@@ -369,12 +377,15 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
                           flex: 2,
                           child: Container(
                             decoration: const BoxDecoration(
-                              border: Border(right: BorderSide(color: AppStyles.dividerColor)),
+                              border: Border(
+                                right: BorderSide(color: AppStyles.dividerColor),
+                                bottom: BorderSide(color: AppStyles.dividerColor),
+                              ),
                             ),
                             padding: const EdgeInsets.all(4.0),
                             child: FittedBox(
                                 fit: BoxFit.scaleDown,
-                                child: Text('$hour:00 - ${hour + 1}:00')),
+                                child: Text(_formatHour(hour))),
                           ),
                         ),
                         Expanded(
@@ -391,7 +402,9 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
                                       : AppStyles.reservationColor)
                                   : null,
                                 border: const Border(
-                                    right: BorderSide(color: AppStyles.dividerColor)),
+                                    right: BorderSide(color: AppStyles.dividerColor),
+                                    bottom: BorderSide(color: AppStyles.dividerColor),
+                                ),
                               ),
                               padding: const EdgeInsets.all(4.0),
                               child: Center(
@@ -428,6 +441,9 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
                                       ? AppStyles.subscriptionColor
                                       : AppStyles.reservationColor)
                                   : null,
+                                border: const Border(
+                                    bottom: BorderSide(color: AppStyles.dividerColor),
+                                ),
                               ),
                               padding: const EdgeInsets.all(4.0),
                               child: Center(
@@ -464,7 +480,7 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
           padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Text(
-              'Total Ore Rezervate Azi: $_totalHoursReservedToday',
+              'Total Ore Rezervate Azi: ${_totalHoursReservedToday.toStringAsFixed(1)}',
               style: const TextStyle(color: AppStyles.lightText, fontWeight: FontWeight.bold),
             ),
           ),
