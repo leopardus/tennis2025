@@ -25,7 +25,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
   bool _isLoading = true;
   static bool _isDataLoaded = false;
 
-  static const double _rowHeight = 40.0; // Changed to 40.0
+  static const double _rowHeight = 40.0;
   static const int _startHour = 8;
   static const int _endHour = 23;
   static const int _hourCount = _endHour - _startHour + 1;
@@ -315,7 +315,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
                 children: [
 
-                                    SizedBox(width: 60.0, child: Center(child: Text('Ora', style: TextStyle(color: AppStyles.uxPrimaryText)))), // Fixed width for hour column header
+                                    SizedBox(width: 100.0, child: Center(child: Text('Ora', style: TextStyle(color: AppStyles.uxPrimaryText)))), // Fixed width for hour column header
 
                                     Expanded(
 
@@ -349,7 +349,7 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
 
                                     children: [
 
-                                      SizedBox(width: 60.0, child: _buildHourColumn()), // Hour column with fixed width
+                                      SizedBox(width: 100.0, child: _buildHourColumn()), // Hour column with fixed width
 
                                         Expanded(
 
@@ -422,47 +422,38 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
     
 
       Widget _buildHourColumn() {
-
-        return Column(
-
-          children: List.generate(_hourCount, (index) {
-
-            final hour = _startHour + index;
-
-            return Container(
-
-              height: _rowHeight,
-
-              decoration: const BoxDecoration(
-
-                border: Border(
-
-                  right: BorderSide(color: AppStyles.uxDividerColor),
-
-                  // Removed bottom border
-
-                ),
-
+        // The painter is placed behind the text column.
+        return Stack(
+          children: [
+            CustomPaint(
+              size: Size(100.0, _hourCount * _rowHeight),
+              painter: _HourLinePainter(
+                hourCount: _hourCount,
+                rowHeight: _rowHeight,
+                lineColor: AppStyles.uxDividerColor,
               ),
-
-              padding: const EdgeInsets.all(4.0),
-
-              alignment: Alignment.topLeft,
-
-              child: Text(
-
-                DateFormat('HH:mm').format(DateTime(2024, 1, 1, hour)), // Changed format
-
-                style: const TextStyle(color: AppStyles.uxSecondaryText, fontSize: AppStyles.fontSizeSmall, fontWeight: FontWeight.bold),
-
-              ),
-
-            );
-
-          }),
-
+            ),
+            Column(
+              children: List.generate(_hourCount, (index) {
+                final hour = _startHour + index;
+                return Container(
+                  height: _rowHeight,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      right: BorderSide(color: AppStyles.uxDividerColor),
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(4.0),
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    DateFormat('HH:mm').format(DateTime(2024, 1, 1, hour)), // Changed format
+                    style: const TextStyle(color: AppStyles.uxSecondaryText, fontSize: AppStyles.fontSizeSmall, fontWeight: FontWeight.bold),
+                  ),
+                );
+              }),
+            ),
+          ],
         );
-
       }
 
     
@@ -540,40 +531,69 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
                         color: AppStyles.uxReservationCardBorder,
 
                         width: AppStyles.uxReservationCardBorderWidth,
-
                       ),
-
                     ),
-
                     margin: const EdgeInsets.all(2.0),
-
                     padding: const EdgeInsets.all(4.0),
-
                     child: Center(
-
                       child: Text(
-
                         _getReservationDisplayText(res),
-
                         style: const TextStyle(color: AppStyles.uxPrimaryText, fontWeight: FontWeight.bold),
-
                         textAlign: TextAlign.center,
-
                       ),
-
                     ),
-
                   ),
-
                 ),
-
               );
-
             }).toList(),
-
           ],
-
         );
-
       }
+}
+
+class _HourLinePainter extends CustomPainter {
+  final int hourCount;
+  final double rowHeight;
+  final Color lineColor;
+
+  _HourLinePainter({
+    required this.hourCount,
+    required this.rowHeight,
+    required this.lineColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final linePaint = Paint()
+      ..color = lineColor
+      ..strokeWidth = 1.5;
+
+    final circlePaint = Paint()
+      ..color = lineColor
+      ..style = PaintingStyle.fill;
+
+    // Position the line near the right border, leaving space for the text on the left.
+    final double lineX = size.width - 12.0; 
+
+    for (int i = 0; i < hourCount; i++) {
+      final currentY = i * rowHeight + (rowHeight / 2);
+
+      // Draw a circle at each hour mark
+      canvas.drawCircle(Offset(lineX, currentY), 2.5, circlePaint);
+
+      // Draw a line to the next hour mark
+      if (i < hourCount - 1) {
+        final nextY = (i + 1) * rowHeight + (rowHeight / 2);
+        // Draw the line from just below the current circle to just above the next circle
+        canvas.drawLine(Offset(lineX, currentY + 2.5), Offset(lineX, nextY - 2.5), linePaint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _HourLinePainter oldDelegate) {
+    return oldDelegate.hourCount != hourCount ||
+        oldDelegate.rowHeight != rowHeight ||
+        oldDelegate.lineColor != lineColor;
+  }
 }
