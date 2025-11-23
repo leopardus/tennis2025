@@ -570,23 +570,24 @@ class _HourLinePainter extends CustomPainter {
 
     final circlePaint = Paint()
       ..color = lineColor
-      ..style = PaintingStyle.fill;
+      ..style = PaintingStyle.stroke // Changed to stroke
+      ..strokeWidth = 1.5; // Added strokeWidth for the circle
 
     // Position the line near the right border, leaving space for the text on the left.
-    final double lineX = size.width - 12.0; 
+    final double lineX = size.width - 48.0; // Adjusted lineX
 
     for (int i = 0; i < hourCount; i++) {
       // Adjusted currentY to align with the center of the hour text
-      final currentY = i * rowHeight + 10.0; 
+      final currentY = i * rowHeight + 12.0; 
 
       // Draw a circle at each hour mark
       canvas.drawCircle(Offset(lineX, currentY), 2.5, circlePaint);
 
       // Draw a line to the next hour mark
       if (i < hourCount - 1) {
-        final nextY = (i + 1) * rowHeight + 10.0; // Adjusted nextY
+        final nextY = (i + 1) * rowHeight + 12.0; // Adjusted nextY
         // Draw the line from just below the current circle to just above the next circle
-        canvas.drawLine(Offset(lineX, currentY + 2.5), Offset(lineX, nextY - 2.5), linePaint);
+        canvas.drawLine(Offset(lineX, currentY + 2.5 + 2.0), Offset(lineX, nextY - 2.5 - 2.0), linePaint);
       }
     }
   }
