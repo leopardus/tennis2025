@@ -135,6 +135,22 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
     return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}';
   }
 
+  String _formatDuration(double duration) {
+    final int hours = duration.floor();
+    final int minutes = ((duration - hours) * 60).round();
+    String result = '';
+    if (hours > 0) {
+      result += '${hours}h';
+    }
+    if (minutes > 0) {
+      result += '${minutes}m';
+    }
+    if (result.isEmpty) {
+      return '0m';
+    }
+    return result;
+  }
+
   void _showReservationDetails(BuildContext context, dynamic reservation) {
     final theme = Provider.of<AppTheme>(context, listen: false);
     final start = (reservation['interval'][0] as num).toDouble();
@@ -424,15 +440,13 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
             ...reservations.map((res) {
               final double start = (res['interval'][0] as num).toDouble();
               final double end = (res['interval'][1] as num).toDouble();
-
-              final double top = (start - startHour) * _rowHeight + 5.0;
-              final double height = (end - start) * _rowHeight;
+              final double duration = end - start;
 
               return Positioned(
-                top: top,
+                top: (start - startHour) * _rowHeight + 5.0,
                 left: 0,
                 right: 0,
-                height: height,
+                height: (end - start) * _rowHeight,
                 child: InkWell(
                   onTap: () => _showReservationDetails(context, res),
                   child: Container(
@@ -447,12 +461,24 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
                       ),
                     ),
                     margin: const EdgeInsets.all(2.0),
-                    padding: const EdgeInsets.all(4.0),
-                    child: Center(
-                      child: Text(
-                        _getReservationDisplayText(res),
-                        style: TextStyle(color: theme.uxPrimaryText, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
+                    padding: const EdgeInsets.all(0.0),
+                    child: Align( // Use Align for left alignment
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start
+                        mainAxisAlignment: MainAxisAlignment.center, // Center vertically if space allows
+                        children: [
+                          Text(
+                            'Ora start: ${_formatHour(start)}, Durata: ${_formatDuration(duration)}',
+                            style: TextStyle(color: theme.uxPrimaryText, fontSize: AppStyles.fontSizeSmall),
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            'Nume: ${_getReservationDisplayText(res)}',
+                            style: TextStyle(color: theme.uxPrimaryText, fontSize: AppStyles.fontSizeSmall),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
                       ),
                     ),
                   ),
