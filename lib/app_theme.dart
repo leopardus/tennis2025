@@ -12,6 +12,12 @@ class AppTheme extends ChangeNotifier {
   Color get uxSubscriptionColor => _uxSubscriptionColor;
   Color get uxReservationColor => _uxReservationColor;
 
+  double _startHour = 8.0;
+  double _endHour = 24.0;
+
+  double get startHour => _startHour;
+  double get endHour => _endHour;
+
   void updateUxPageBackground(Color color) {
     _uxPageBackground = color;
     notifyListeners();
@@ -29,6 +35,16 @@ class AppTheme extends ChangeNotifier {
 
   void updateUxReservationColor(Color color) {
     _uxReservationColor = color;
+    notifyListeners();
+  }
+
+  void updateStartHour(double hour) {
+    _startHour = hour;
+    notifyListeners();
+  }
+
+  void updateEndHour(double hour) {
+    _endHour = hour;
     notifyListeners();
   }
 }

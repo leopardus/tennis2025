@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:padel_one/app_styles.dart';
+import 'package:padel_one/app_theme.dart';
 import 'package:padel_one/reservation_form.dart';
+import 'package:provider/provider.dart';
 
 // This list will be populated from the JSON file.
 // It remains a global variable to be accessible from the reports page.
@@ -19,9 +21,9 @@ class TimeSlotTable extends StatefulWidget {
 }
 
 class _TimeSlotTableState extends State<TimeSlotTable> {
-  Map<double, dynamic> _reservationsTeren1 = {}; // Changed to Map<double, dynamic>
-  Map<double, dynamic> _reservationsTeren2 = {}; // Changed to Map<double, dynamic>
-  double _totalHoursReservedToday = 0; // Changed to double
+  Map<double, dynamic> _reservationsTeren1 = {};
+  Map<double, dynamic> _reservationsTeren2 = {};
+  double _totalHoursReservedToday = 0;
   bool _isLoading = true;
   static bool _isDataLoaded = false;
 
@@ -76,7 +78,6 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
         final double startHour = (reservation['interval'][0] as num).toDouble();
         final double endHour = (reservation['interval'][1] as num).toDouble();
 
-        // Calculate total hours
         if (!countedIds.contains(reservation['id'])) {
           totalHours += (endHour - startHour);
           countedIds.add(reservation['id']);
@@ -103,7 +104,6 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
   }
 
   void _deleteReservation(String id) {
-    // TODO: Add logic to delete subscription series
     mockReservations.removeWhere((res) => res['id'] == id);
     _processReservationsForDate();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -168,7 +168,7 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
                 child: IconButton(
                   icon: const Icon(Icons.close, color: AppStyles.destructiveAction),
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close details dialog
+                    Navigator.of(context).pop();
                     _showDeleteConfirmation(context, reservation['id']);
                   },
                 ),
@@ -198,7 +198,7 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
               style: TextButton.styleFrom(foregroundColor: AppStyles.buttonText),
               child: const Text('Editare'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close details dialog
+                Navigator.of(context).pop();
                 _navigateToReservationForm(0, 0,
                     isEditing: true, reservation: reservation);
               },
@@ -225,7 +225,6 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
     if (result == null) return;
 
     if (isEditing) {
-      // Find and update the reservation
       final index = mockReservations.indexWhere((res) => res['id'] == result['id']);
       if (index != -1) {
         setState(() {
@@ -234,14 +233,12 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
         });
       }
     } else {
-      // --- Handle new reservation (single or subscription) ---
       final isSubscription = result['isSubscription'] ?? false;
       List<Map<String, dynamic>> reservationsToAdd = [];
       bool conflictFound = false;
       String? conflictDate;
 
       if (isSubscription && result['subscriptionEndDate'] != null) {
-        // --- Subscription Logic ---
         final subscriptionId = DateTime.now().millisecondsSinceEpoch.toString();
         DateTime currentDate = DateFormat('dd/MM/yyyy').parse(result['date']);
         final DateTime endDate = DateTime.parse(result['subscriptionEndDate']);
@@ -255,12 +252,10 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
           currentDate = currentDate.add(const Duration(days: 7));
         }
       } else {
-        // --- Single Reservation Logic ---
         result['id'] = DateTime.now().millisecondsSinceEpoch.toString();
         reservationsToAdd.add(result);
       }
 
-      // --- Conflict Check for all reservations to be added ---
       for (final newRes in reservationsToAdd) {
         final double start = (newRes['interval'][0] as num).toDouble();
         final double end = (newRes['interval'][1] as num).toDouble();
@@ -281,7 +276,6 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
         if (conflictFound) break;
       }
 
-      // --- Final Action ---
       if (mounted) {
         if (conflictFound) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -313,6 +307,9 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<AppTheme>(context);
+    final int itemCount = ((theme.endHour - theme.startHour) * 2).toInt();
+
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -348,29 +345,28 @@ class _TimeSlotTableState extends State<TimeSlotTable> {
         Expanded(
           child: Stack(
             children: [
-              // This container will fill the background of the Expanded area
               Container(color: AppStyles.darkText),
               ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: 32, // 16 hours * 2 slots/hour
+                itemCount: itemCount,
                 itemBuilder: (context, index) {
-                  final double hour = 8.0 + index * 0.5;
+                  final double hour = theme.startHour + index * 0.5;
 
                   final dynamic reservationTeren1 = _reservationsTeren1[hour];
                   final bool isOccupiedTeren1 = reservationTeren1 != null;
                   final bool isFirstOccupiedTeren1 = isOccupiedTeren1 &&
-                      (_reservationsTeren1[hour - 0.5]?['id'] !=
+                      (hour == theme.startHour || _reservationsTeren1[hour - 0.5]?['id'] !=
                           reservationTeren1['id']);
                   
                   final dynamic reservationTeren2 = _reservationsTeren2[hour];
                   final bool isOccupiedTeren2 = reservationTeren2 != null;
                   final bool isFirstOccupiedTeren2 = isOccupiedTeren2 &&
-                      (_reservationsTeren2[hour - 0.5]?['id'] !=
+                      (hour == theme.startHour || _reservationsTeren2[hour - 0.5]?['id'] !=
                           reservationTeren2['id']);
 
                   return Container(
-                    height: 20, // Half the original row height
-                    color: AppStyles.cardBackground, // Each row has its own background
+                    height: 20,
+                    color: AppStyles.cardBackground,
                     child: Row(
                       children: [
                         Expanded(

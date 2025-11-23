@@ -23,14 +23,11 @@ class TimeSlotTableUx extends StatefulWidget {
 class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
   List<Map<String, dynamic>> _reservationsForDayTeren1 = [];
   List<Map<String, dynamic>> _reservationsForDayTeren2 = [];
-  double _totalHoursReservedToday = 0; // Changed to double
+  double _totalHoursReservedToday = 0;
   bool _isLoading = true;
   static bool _isDataLoaded = false;
 
   static const double _rowHeight = 40.0; // Represents 1 hour
-  static const int _startHour = 8;
-  static const int _endHour = 23;
-  static const int _hourCount = _endHour - _startHour + 1;
 
   @override
   void initState() {
@@ -76,12 +73,11 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
         .where((res) => res['date'] == formattedDate)
         .toList();
 
-    double totalHours = 0; // Changed to double
+    double totalHours = 0;
     final countedIds = <String>{};
 
     for (var res in todayReservations) {
       if (!countedIds.contains(res['id'])) {
-        // Handle both int and double from JSON
         final start = (res['interval'][0] as num).toDouble();
         final end = (res['interval'][1] as num).toDouble();
         totalHours += (end - start);
@@ -100,7 +96,6 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
   }
 
   void _deleteReservation(String id) {
-    // TODO: Add logic to delete subscription series
     mockReservations.removeWhere((res) => res['id'] == id);
     _processReservationsForDate();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -224,7 +219,6 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
     if (result == null) return;
 
     if (isEditing) {
-      // Find and update the reservation
       final index = mockReservations.indexWhere((res) => res['id'] == result['id']);
       if (index != -1) {
         setState(() {
@@ -233,14 +227,12 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
         });
       }
     } else {
-      // --- Handle new reservation (single or subscription) ---
       final isSubscription = result['isSubscription'] ?? false;
       List<Map<String, dynamic>> reservationsToAdd = [];
       bool conflictFound = false;
       String? conflictDate;
 
       if (isSubscription && result['subscriptionEndDate'] != null) {
-        // --- Subscription Logic ---
         final subscriptionId = DateTime.now().millisecondsSinceEpoch.toString();
         DateTime currentDate = DateFormat('dd/MM/yyyy').parse(result['date']);
         final DateTime endDate = DateTime.parse(result['subscriptionEndDate']);
@@ -254,12 +246,10 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
           currentDate = currentDate.add(const Duration(days: 7));
         }
       } else {
-        // --- Single Reservation Logic ---
         result['id'] = DateTime.now().millisecondsSinceEpoch.toString();
         reservationsToAdd.add(result);
       }
 
-      // --- Conflict Check for all reservations to be added ---
       for (final newRes in reservationsToAdd) {
         final double start = (newRes['interval'][0] as num).toDouble();
         final double end = (newRes['interval'][1] as num).toDouble();
@@ -280,7 +270,6 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
         if (conflictFound) break;
       }
 
-      // --- Final Action ---
       if (mounted) {
         if (conflictFound) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -313,144 +302,87 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<AppTheme>(context);
+    final int hourCount = (theme.endHour - theme.startHour).ceil();
+
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
         return Column(
-
           children: [
-
             Container(
-
               color: AppStyles.uxHeaderBackground,
-
               padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-
               child: Row(
-
                 children: [
-
-                                    SizedBox(width: 70.0, child: Center(child: Text('Ora', style: TextStyle(color: theme.uxPrimaryText)))), // Fixed width for hour column header
-
+                                    SizedBox(width: 70.0, child: Center(child: Text('Ora', style: TextStyle(color: theme.uxPrimaryText)))),
                                     Expanded(
-
                                         flex: 3,
-
                                         child: Center(
-
                                             child: Text('Teren 1', style: TextStyle(color: theme.uxPrimaryText)))),
-
                                     Expanded(
-
                                         flex: 3,
-
                                         child: Center(
-
                                             child: Text('Teren 2', style: TextStyle(color: theme.uxPrimaryText)))),
-
                                   ],
-
                                 ),
-
                               ),
-
                               Expanded(
-
                                 child: SingleChildScrollView(
-
                                   child: Row(
-
                                     crossAxisAlignment: CrossAxisAlignment.start,
-
                                     children: [
-
-                                      SizedBox(width: 70.0, child: _buildHourColumn()), // Hour column with fixed width
-
+                                      SizedBox(width: 70.0, child: _buildHourColumn(hourCount, theme.startHour)),
                                         Expanded(
-
                                           flex: 3,
-
-                                          child: Container( // Wrapper for court 1 with right border
-
-                                            height: _hourCount * _rowHeight, // Explicitly set height
-
+                                          child: Container(
+                                            height: hourCount * _rowHeight,
                                             decoration: const BoxDecoration(
-
                                               border: Border(right: BorderSide(color: AppStyles.uxDividerColor)),
-
                                             ),
-
-                                            child: _buildCourtColumn(1, _reservationsForDayTeren1),
-
+                                            child: _buildCourtColumn(1, _reservationsForDayTeren1, theme.startHour),
                                           ),
-
                                         ),
-
                                         Expanded(
-
                                           flex: 3,
-
-                                          child: Container( // Wrapper for court 2, no right border
-
-                                            height: _hourCount * _rowHeight, // Explicitly set height
-
-                                            child: _buildCourtColumn(2, _reservationsForDayTeren2),
-
+                                          child: Container(
+                                            height: hourCount * _rowHeight,
+                                            child: _buildCourtColumn(2, _reservationsForDayTeren2, theme.startHour),
                                           ),
-
                                         ),
-
                   ],
-
                 ),
-
               ),
-
             ),
-
             Container(
-
               color: AppStyles.uxHeaderBackground,
-
               padding: const EdgeInsets.all(8.0),
-
               child: Center(
-
                 child: Text(
-
                   'Total Ore Rezervate Azi: ${_totalHoursReservedToday.toStringAsFixed(1)}',
                   style: TextStyle(color: theme.uxPrimaryText, fontWeight: FontWeight.bold),
-
                 ),
-
               ),
-
             ),
-
           ],
-
         );
-
       }
 
     
-
-      Widget _buildHourColumn() {
-        // The painter is placed behind the text column.
+      Widget _buildHourColumn(int hourCount, double startHour) {
         return Stack(
           children: [
             CustomPaint(
-              size: Size(70.0, _hourCount * _rowHeight),
+              size: Size(70.0, hourCount * _rowHeight),
               painter: _HourLinePainter(
-                hourCount: _hourCount,
+                hourCount: hourCount,
                 rowHeight: _rowHeight,
                 lineColor: AppStyles.uxDividerColor,
               ),
             ),
             Column(
-              children: List.generate(_hourCount, (index) {
-                final hour = _startHour + index;
+              children: List.generate(hourCount + 1, (index) { // +1 to include the last hour label
+                final hour = startHour + index;
                 return Container(
                   height: _rowHeight,
                   decoration: const BoxDecoration(
@@ -458,10 +390,10 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
                       right: BorderSide(color: AppStyles.uxDividerColor),
                     ),
                   ),
-                  padding: const EdgeInsets.only(left: 24.0, top: 4.0, right: 4.0, bottom: 4.0), // Adjusted padding
+                  padding: const EdgeInsets.only(left: 24.0, top: 4.0, right: 4.0, bottom: 4.0),
                   alignment: Alignment.topLeft,
                   child: Text(
-                    DateFormat('HH:mm').format(DateTime(2024, 1, 1, hour)), // Changed format
+                    _formatHour(hour),
                     style: const TextStyle(color: AppStyles.uxSecondaryText, fontSize: AppStyles.fontSizeSmall, fontWeight: FontWeight.bold),
                   ),
                 );
@@ -472,76 +404,45 @@ class _TimeSlotTableUxState extends State<TimeSlotTableUx> {
       }
 
     
-
-      Widget _buildCourtColumn(int courtNum, List<Map<String, dynamic>> reservations) {
+      Widget _buildCourtColumn(int courtNum, List<Map<String, dynamic>> reservations, double startHour) {
         final theme = Provider.of<AppTheme>(context);
         return Stack(
-
           children: [
-
-            // --- Background for tap detection ---
-
             Positioned.fill(
-
               child: GestureDetector(
-
                 onTapDown: (details) {
                   final double y = details.localPosition.dy;
-                  // Calculate the hour with 30-min precision
-                  final double hour = _startHour + (y / _rowHeight);
-                  // Round to the nearest half hour
+                  final double hour = startHour + (y / _rowHeight);
                   final double slot = (hour * 2).round() / 2;
-                  _navigateToReservationForm(slot, courtNum);
+                  if (slot < theme.endHour) {
+                    _navigateToReservationForm(slot, courtNum);
+                  }
                 },
-
-                child: Container(color: Colors.transparent), // Transparent background to capture taps
-
+                child: Container(color: Colors.transparent),
               ),
-
             ),
-
-            // --- Reservation cards ---
-
             ...reservations.map((res) {
-              // Handle both int and double from JSON
               final double start = (res['interval'][0] as num).toDouble();
               final double end = (res['interval'][1] as num).toDouble();
 
-              final double top = (start - _startHour) * _rowHeight + 5.0; // Adjusted top position
+              final double top = (start - startHour) * _rowHeight + 5.0;
               final double height = (end - start) * _rowHeight;
 
-    
-
               return Positioned(
-
                 top: top,
-
                 left: 0,
-
                 right: 0,
-
                 height: height,
-
                 child: InkWell(
-
                   onTap: () => _showReservationDetails(context, res),
-
                   child: Container(
-
                     decoration: BoxDecoration(
-
                       color: res['isSubscription'] == true
-
                           ? theme.uxSubscriptionColor
-
                           : theme.uxReservationColor,
-
                       borderRadius: BorderRadius.circular(AppStyles.uxReservationCardCornerRadius),
-
                       border: Border.all(
-
                         color: AppStyles.uxReservationCardBorder,
-
                         width: AppStyles.uxReservationCardBorderWidth,
                       ),
                     ),
@@ -582,21 +483,17 @@ class _HourLinePainter extends CustomPainter {
 
     final circlePaint = Paint()
       ..color = lineColor
-      ..style = PaintingStyle.stroke // Changed to stroke
-      ..strokeWidth = 1.5; // Added strokeWidth for the circle
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
 
-    // Position the line near the right border, leaving space for the text on the left.
-    final double lineX = 12.0; // Adjusted lineX to the left
+    final double lineX = 12.0;
 
-    for (int i = 0; i < hourCount; i++) {
-      // Draw main hour circle
+    for (int i = 0; i < hourCount + 1; i++) { // +1 to include the last hour circle
       final currentY = i * rowHeight + 12.0; 
       canvas.drawCircle(Offset(lineX, currentY), 2.5, circlePaint);
 
-      // Draw a line to the next hour mark
-      if (i < hourCount - 1) {
-        final nextY = (i + 1) * rowHeight + 12.0; // Adjusted nextY
-        // Draw the line from just below the current circle to just above the next circle
+      if (i < hourCount) { // Draw line only between the slots
+        final nextY = (i + 1) * rowHeight + 12.0;
         canvas.drawLine(Offset(lineX, currentY + 2.5 + 2.0), Offset(lineX, nextY - 2.5 - 2.0), linePaint);
       }
     }

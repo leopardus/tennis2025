@@ -17,6 +17,50 @@ class _SettingsPageState extends State<SettingsPage> {
     Colors.white, Colors.black,
   ];
 
+  final List<double> _possibleHours = List.generate(49, (index) => index * 0.5);
+
+  String _formatHour(double hour) {
+    final int h = hour.floor();
+    final int m = ((hour - h) * 60).round();
+    return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}';
+  }
+
+  void _showHourPicker(BuildContext context, String title, double currentHour, Function(double) onHourSelected) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 300,
+            child: ListView.builder(
+              itemCount: _possibleHours.length,
+              itemBuilder: (context, index) {
+                final hour = _possibleHours[index];
+                return ListTile(
+                  title: Text(_formatHour(hour)),
+                  onTap: () {
+                    onHourSelected(hour);
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Anuleaza'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showColorPicker(BuildContext context, Color currentColor, Function(Color) onColorSelected) {
     showDialog(
       context: context,
@@ -108,10 +152,44 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 },
               ),
+              const Divider(),
+              _buildTimeSettingTile(
+                label: 'Ora de inceput',
+                hour: theme.startHour,
+                onTap: () {
+                  _showHourPicker(context, 'Selectati ora de inceput', theme.startHour, (hour) {
+                    theme.updateStartHour(hour);
+                  });
+                },
+              ),
+              _buildTimeSettingTile(
+                label: 'Ora de sfarsit',
+                hour: theme.endHour,
+                onTap: () {
+                  _showHourPicker(context, 'Selectati ora de sfarsit', theme.endHour, (hour) {
+                    theme.updateEndHour(hour);
+                  });
+                },
+              ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildTimeSettingTile({
+    required String label,
+    required double hour,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      title: Text(label),
+      trailing: Text(
+        _formatHour(hour),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+      onTap: onTap,
     );
   }
 

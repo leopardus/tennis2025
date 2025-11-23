@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:padel_one/app_styles.dart';
@@ -38,7 +39,7 @@ class _ReservationFormState extends State<ReservationForm> {
   bool get isEditing => widget.initialReservation != null;
 
   // Generate time slots from 8:00 to 23:30
-  final List<double> availableTimes = List.generate(32, (index) => 8.0 + index * 0.5);
+  final List<double> availableTimes = List.generate(33, (index) => 8.0 + index * 0.5);
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class _ReservationFormState extends State<ReservationForm> {
           : null;
     } else {
       _startHour = widget.initialHour!;
-      _endHour = widget.initialHour! + 1.0; // Default to 1-hour reservation
+      _endHour = min(widget.initialHour! + 1.0, 24.0); // Default to 1-hour, clamped at 24:00
       _teren = widget.initialTeren!;
       _personName = '';
       _isSubscription = false;
@@ -157,7 +158,7 @@ class _ReservationFormState extends State<ReservationForm> {
               DropdownButtonFormField<double>(
                 value: _startHour,
                 decoration: const InputDecoration(labelText: 'Ora inceput'),
-                items: availableTimes.where((time) => time < 23.5).map((hour) { // Cannot start at 23:30 for a 30-min slot
+                items: availableTimes.where((time) => time < _endHour).map((hour) {
                   return DropdownMenuItem(value: hour, child: Text(_formatHour(hour)));
                 }).toList(),
                 onChanged: (value) {
@@ -173,7 +174,7 @@ class _ReservationFormState extends State<ReservationForm> {
               DropdownButtonFormField<double>(
                 value: _endHour,
                 decoration: const InputDecoration(labelText: 'Ora sfarsit'),
-                items: availableTimes.where((time) => time > 8.0).map((hour) {
+                items: availableTimes.where((time) => time > _startHour).map((hour) {
                   return DropdownMenuItem(
                       value: hour, child: Text(_formatHour(hour)));
                 }).toList(),
