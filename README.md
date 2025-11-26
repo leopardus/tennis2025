@@ -32,3 +32,27 @@ Pentru a publica aplicatia web pe Firebase Hosting, urmeaza acesti pasi:
     ```bash
     firebase deploy --only hosting
     ```
+
+## Project Description
+
+This is a Flutter application designed for managing padel court reservations. It provides a user-friendly interface for viewing court availability, making new reservations, and managing existing ones.
+
+**Key Features:**
+
+*   **Authentication:** Users can sign in using Google Sign-In, leveraging Firebase for backend authentication.
+*   **Dynamic Schedule View:** The application displays daily schedules for padel courts, allowing users to see available time slots at a glance.
+*   **Reservation Management:** Users can easily create, edit, and delete reservations. The system supports both single-session bookings and subscription-based reservations with defined end dates.
+*   **Configurable Courts:** The number of available padel courts can be configured by the user from 2 to 5 via the settings page, with 2 courts as the default. The application's UI dynamically adapts to display the selected number of courts.
+*   **Reporting:** Includes a reporting section for insights and statistics related to reservations.
+*   **Responsive UI:** Designed to provide a consistent and optimal user experience across various screen sizes.
+
+**Technical Details:**
+
+*   **Framework:** Flutter (Dart)
+*   **State Management:** Provider pattern is utilized for efficient state management across the application.
+*   **Backend Services:** Firebase is integrated for core backend functionalities, including authentication.
+*   **UI Components:** Leverages `carousel_slider` for date navigation and `fl_chart` for data visualization in reports.
+
+**Code Structure and Refactoring:**
+
+The codebase has undergone significant refactoring to enhance maintainability and organization. Key UI elements and logic have been extracted into smaller, reusable widgets located in the `lib/widgets` directory, with specific dialogs separated into `lib/widgets/dialogs`. This modular approach promotes cleaner code and easier future development.

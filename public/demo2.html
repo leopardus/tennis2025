@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Preview palete - Orar terenuri</title>
+<style>
+  :root{
+    --radius:14px;
+    --card-radius:10px;
+    --gap:14px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  body{
+    margin:0;
+    padding:20px;
+    background:#f2f6f9;
+    color:#0b1220;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* layout */
+  .wrap{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+
+  .panel{
+    width:320px; /* mobile preview width */
+    background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.9));
+    border-radius:var(--radius);
+    box-shadow:0 8px 22px rgba(20,30,40,0.12);
+    overflow:hidden;
+    border:1px solid rgba(10,10,30,0.03);
+  }
+
+  .panel .top {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    color:white;
+  }
+  .panel .title {
+    font-weight:700;
+    font-size:18px;
+    line-height:1;
+  }
+  .panel .date {
+    margin-left:auto;
+    font-weight:600;
+    opacity:0.95;
+  }
+
+  /* horizontal courts row */
+  .courts {
+    display:flex;
+    gap:8px;
+    padding:12px;
+    align-items:center;
+  }
+  .court {
+    flex:1;
+    padding:8px 10px;
+    text-align:center;
+    font-weight:700;
+    border-radius:10px;
+    color:var(--court-fore);
+    font-size:13px;
+    box-shadow:0 2px 8px rgba(10,10,20,0.06) inset;
+  }
+
+  /* main calendar area */
+  .calendar {
+    display:flex;
+    gap:10px;
+    padding:12px;
+    background:var(--grid-bg);
+  }
+  .hours {
+    width:46px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:flex-start;
+    padding-top:6px;
+  }
+  .hours .h {
+    width:100%;
+    font-size:12px;
+    color:rgba(10,20,30,0.6);
+    text-align:left;
+    padding-left:4px;
+  }
+  .grid {
+    flex:1;
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:8px;
+  }
+
+  /* booking card */
+  .slot {
+    min-height:46px;
+    border-radius:10px;
+    background:transparent;
+    position:relative;
+  }
+  .card {
+    padding:8px;
+    border-radius:8px;
+    color:white;
+    font-weight:700;
+    font-size:13px;
+    box-shadow:0 6px 18px rgba(12,20,30,0.12);
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .small {font-weight:600; font-size:11px; opacity:0.95}
+
+  /* palette variants - CSS variables per panel */
+  .sport { --header-bg:#0f172a; --accent:#3B82F6; --secondary:#22C55E; --alert:#EF4444; --grid-bg:#F1F5F9; --court-fore:#07203f; }
+  .neon { --header-bg:#070A12; --accent:#6366F1; --secondary:#14B8A6; --alert:#F97316; --grid-bg:#FEFEFF; --court-fore:#061226; }
+  .clean { --header-bg:#1E40AF; --accent:#2563EB; --secondary:#10B981; --alert:#DC2626; --grid-bg:#EEF6FA; --court-fore:#031024; }
+
+  /* apply header and court colors */
+  .panel .top { background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(0,0,0,0.03)); background-color:var(--header-bg); }
+  .panel .court { background:rgba(255,255,255,0.06); color:var(--court-fore); }
+
+  /* cards styled using palette */
+  .panel .card.primary { background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 75%, black 15%)); }
+  .panel .card.secondary { background: linear-gradient(180deg, var(--secondary), color-mix(in srgb, var(--secondary) 75%, black 10%)); }
+  .panel .card.alert { background: linear-gradient(180deg, var(--alert), color-mix(in srgb, var(--alert) 75%, black 10%)); }
+
+  /* small responsive */
+  @media (max-width:980px){
+    .wrap { justify-content:center; }
+  }
+  @media (max-width:980px) and (max-width:680px){
+    .panel { width:92%; }
+  }
+
+  /* decorative image reference */
+  .refimg { width:100%; height:120px; object-fit:cover; opacity:0.12; display:block; }
+  .panel .meta-row { display:flex; gap:8px; align-items:center; padding:10px 12px 6px; }
+  .legend { display:flex; gap:8px; align-items:center; font-size:12px; }
+  .legend .dot{ width:12px; height:12px; border-radius:10px; display:inline-block; }
+  .foot { padding:12px; font-size:12px; color:rgba(10,10,20,0.55); text-align:center; }
+</style>
+</head>
+<body>
+
+<h2 style="text-align:center;margin:0 0 12px 0">Preview palete — vizual (mobil)</h2>
+<p style="text-align:center;margin:0 0 18px 0;color:#46515a;font-size:13px">Salvează acest fișier și deschide în Safari (Files → Open in Safari)</p>
+
+<div class="wrap">
+
+  <!-- SPORT & ENERGY -->
+  <section class="panel sport" aria-label="Sport & Energy">
+    <!-- optional reference image -->
+    <img class="refimg" src="/mnt/data/5A499C2D-3327-480B-A842-C051280E2F35.jpeg" alt="referinta" />
+    <div class="top">
+      <div>
+        <div class="title">Vineri · 21/11/2025</div>
+        <div style="font-size:12px;opacity:0.9">Orar terenuri</div>
+      </div>
+      <div class="date">08:00 - 20:00</div>
+    </div>
+
+    <div class="courts">
+      <div class="court">Teren 1</div>
+      <div class="court">Teren 2</div>
+      <div class="court">Teren 3</div>
+      <div class="court">Teren 4</div>
+    </div>
+
+    <div class="calendar">
+      <div class="hours">
+        <div class="h">8:00</div><div class="h">9:00</div><div class="h">10:00</div><div class="h">11:00</div><div class="h">12:00</div>
+        <div class="h">13:00</div><div class="h">14:00</div><div class="h">15:00</div><div class="h">16:00</div><div class="h">17:00</div>
+      </div>
+
+      <div class="grid">
+        <div class="slot"><div class="card primary"><div>FT</div><div class="small">Player A</div></div></div>
+        <div class="slot"><div class="card primary"><div>FT</div><div class="small">Player B</div></div></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+        <div class="slot"><div class="card primary"><div>League</div><div class="small">Team C</div></div></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card secondary"><div>Training</div><div class="small">School</div></div></div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card alert"><div>Private</div><div class="small">Player X</div></div></div>
+
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card primary"><div>Match</div><div class="small">Player Y</div></div></div>
+        <div class="slot"></div>
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <div class="legend">
+        <span class="dot" style="background:var(--accent)"></span> Normal
+      </div>
+      <div style="flex:1"></div>
+      <div class="legend"><span class="dot" style="background:var(--secondary)"></span> Secondary</div>
+      <div style="width:8px"></div>
+      <div class="legend"><span class="dot" style="background:var(--alert)"></span> Alert</div>
+    </div>
+
+    <div class="foot">Paleta: Sport &amp; Energy — albastru · verde · roșu</div>
+  </section>
+
+  <!-- NIGHT & NEON -->
+  <section class="panel neon" aria-label="Night & Neon">
+    <img class="refimg" src="/mnt/data/5A499C2D-3327-480B-A842-C051280E2F35.jpeg" alt="referinta" />
+    <div class="top">
+      <div>
+        <div class="title">Vineri · 21/11/2025</div>
+        <div style="font-size:12px;opacity:0.9">Orar terenuri</div>
+      </div>
+      <div class="date">08:00 - 20:00</div>
+    </div>
+
+    <div class="courts">
+      <div class="court">Teren 1</div>
+      <div class="court">Teren 2</div>
+      <div class="court">Teren 3</div>
+      <div class="court">Teren 4</div>
+    </div>
+
+    <div class="calendar">
+      <div class="hours">
+        <div class="h">8:00</div><div class="h">9:00</div><div class="h">10:00</div><div class="h">11:00</div><div class="h">12:00</div>
+        <div class="h">13:00</div><div class="h">14:00</div><div class="h">15:00</div><div class="h">16:00</div><div class="h">17:00</div>
+      </div>
+
+      <div class="grid">
+        <div class="slot"><div class="card primary"><div>FT</div><div class="small">Player A</div></div></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card secondary"><div>Clinic</div><div class="small">Coach</div></div></div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+        <div class="slot"><div class="card primary"><div>Open</div><div class="small">Drop-in</div></div></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card alert"><div>Booked</div><div class="small">Player Z</div></div></div>
+
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card secondary"><div>Training</div><div class="small">Group</div></div></div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+        <div class="slot"><div class="card primary"><div>Match</div><div class="small">Team D</div></div></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card primary"><div>FT</div><div class="small">Player B</div></div></div>
+        <div class="slot"></div>
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <div class="legend">
+        <span class="dot" style="background:var(--accent)"></span> Normal
+      </div>
+      <div style="flex:1"></div>
+      <div class="legend"><span class="dot" style="background:var(--secondary)"></span> Secondary</div>
+      <div style="width:8px"></div>
+      <div class="legend"><span class="dot" style="background:var(--alert)"></span> Alert</div>
+    </div>
+
+    <div class="foot">Paleta: Night &amp; Neon — indigo · turcoaz · portocaliu</div>
+  </section>
+
+  <!-- CLEAN & BUSINESS -->
+  <section class="panel clean" aria-label="Clean & Business">
+    <img class="refimg" src="/mnt/data/5A499C2D-3327-480B-A842-C051280E2F35.jpeg" alt="referinta" />
+    <div class="top">
+      <div>
+        <div class="title">Vineri · 21/11/2025</div>
+        <div style="font-size:12px;opacity:0.9">Orar terenuri</div>
+      </div>
+      <div class="date">08:00 - 20:00</div>
+    </div>
+
+    <div class="courts">
+      <div class="court">Teren 1</div>
+      <div class="court">Teren 2</div>
+      <div class="court">Teren 3</div>
+      <div class="court">Teren 4</div>
+    </div>
+
+    <div class="calendar">
+      <div class="hours">
+        <div class="h">8:00</div><div class="h">9:00</div><div class="h">10:00</div><div class="h">11:00</div><div class="h">12:00</div>
+        <div class="h">13:00</div><div class="h">14:00</div><div class="h">15:00</div><div class="h">16:00</div><div class="h">17:00</div>
+      </div>
+
+      <div class="grid">
+        <div class="slot"><div class="card primary"><div>FT</div><div class="small">Player A</div></div></div>
+        <div class="slot"><div class="card primary"><div>FT</div><div class="small">Player B</div></div></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+        <div class="slot"><div class="card secondary"><div>Training</div><div class="small">Kids</div></div></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card alert"><div>Private</div><div class="small">Player X</div></div></div>
+
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card primary"><div>Match</div><div class="small">Club</div></div></div>
+        <div class="slot"></div>
+
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+        <div class="slot"><div class="card secondary"><div>Clinic</div><div class="small">Coach</div></div></div>
+
+        <div class="slot"></div>
+        <div class="slot"><div class="card primary"><div>FT</div><div class="small">Player C</div></div></div>
+        <div class="slot"></div>
+        <div class="slot"></div>
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <div class="legend">
+        <span class="dot" style="background:var(--accent)"></span> Normal
+      </div>
+      <div style="flex:1"></div>
+      <div class="legend"><span class="dot" style="background:var(--secondary)"></span> Secondary</div>
+      <div style="width:8px"></div>
+      <div class="legend"><span class="dot" style="background:var(--alert)"></span> Alert</div>
+    </div>
+
+    <div class="foot">Paleta: Clean &amp; Business — albastru · verde calm · roșu</div>
+  </section>
+
+</div>
+
+</body>
+</html>

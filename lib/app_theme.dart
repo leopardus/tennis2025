@@ -18,8 +18,16 @@ class AppTheme extends ChangeNotifier {
   double get startHour => _startHour;
   double get endHour => _endHour;
 
+  int _numberOfCourts = 2;
+  int get numberOfCourts => _numberOfCourts;
+
   void updateUxPageBackground(Color color) {
     _uxPageBackground = color;
+    notifyListeners();
+  }
+  
+  void updateNumberOfCourts(int count) {
+    _numberOfCourts = count;
     notifyListeners();
   }
 

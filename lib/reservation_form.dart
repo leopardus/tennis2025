@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:padel_one/app_styles.dart';
 
+import 'package:padel_one/app_theme.dart';
+import 'package:provider/provider.dart';
+
 class ReservationForm extends StatefulWidget {
   // For creating a new reservation
   final double? initialHour; // Changed to double
@@ -131,6 +134,7 @@ class _ReservationFormState extends State<ReservationForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<AppTheme>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? 'Editare Rezervare' : 'Creaza Rezervare'),
@@ -144,10 +148,11 @@ class _ReservationFormState extends State<ReservationForm> {
               DropdownButtonFormField<int>(
                 value: _teren,
                 decoration: const InputDecoration(labelText: 'Teren'),
-                items: const [
-                  DropdownMenuItem(value: 1, child: Text('Teren 1')),
-                  DropdownMenuItem(value: 2, child: Text('Teren 2')),
-                ],
+                items: List.generate(theme.numberOfCourts, (index) {
+                  final courtNum = index + 1;
+                  return DropdownMenuItem(
+                      value: courtNum, child: Text('Teren $courtNum'));
+                }),
                 onChanged: (value) {
                   setState(() {
                     _teren = value!;

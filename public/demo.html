@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Preview Orar - Clean & Business Palette</title>
+<style>
+  :root{
+    /* Clean & Business palette */
+    --header: #1E40AF;       /* medium navy header */
+    --primary: #2563EB;      /* blue primary booking */
+    --secondary: #10B981;    /* calm green secondary */
+    --alert: #DC2626;        /* red alert */
+    --grid-bg: #EEF2FF;      /* light bluish-gray background */
+    --court-bar: #FBBF24;    /* yellow for court labels (optional) */
+    --muted: #6B7280;
+    --card-radius: 10px;
+    --card-shadow: 0 6px 18px rgba(16,24,40,0.12);
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  /* Page layout */
+  body{
+    margin:0;
+    font-family: var(--font-sans);
+    background: linear-gradient(180deg,#f6f9ff 0%, #eef6ff 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:24px;
+  }
+
+  /* Phone mockup container */
+  .phone {
+    width: 390px;          /* mobile preview width */
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 24px 60px rgba(2,6,23,0.18);
+    overflow: hidden;
+    border: 8px solid rgba(16,24,40,0.04);
+  }
+
+  /* header */
+  .header {
+    background: var(--header);
+    color: white;
+    padding: 14px 18px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .header .left{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .app-title{
+    font-weight:700;
+    font-size:18px;
+    letter-spacing:0.2px;
+  }
+  .date {
+    font-size:14px;
+    opacity:0.95;
+  }
+
+  /* courts bar */
+  .courts-bar{
+    display:flex;
+    background:var(--court-bar);
+    gap:0;
+    padding:8px 10px;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .court {
+    flex:1;
+    text-align:center;
+    font-weight:600;
+    color:#1f2937;
+    padding:8px 6px;
+    border-radius:8px;
+    margin:0 6px;
+    background: rgba(255,255,255,0.12);
+    font-size:13px;
+  }
+
+  /* schedule area */
+  .schedule {
+    display:grid;
+    grid-template-columns: 72px 1fr;
+    gap:0;
+    background: var(--grid-bg);
+    padding: 14px;
+  }
+
+  /* left hours column */
+  .hours {
+    background: rgba(16,24,40,0.04);
+    padding:10px 8px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .hour {
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    font-size:13px;
+    color:var(--muted);
+    padding-right:8px;
+  }
+
+  /* grid for 4 courts */
+  .grid-wrap {
+    padding-left:12px;
+  }
+  .grid {
+    --rows: 13; /* 8:00 - 20:00 = 13 rows */
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(var(--rows), 48px);
+    gap:10px;
+    position:relative;
+  }
+  .grid-cell {
+    background: rgba(255,255,255,0.6);
+    border-radius:8px;
+    border: 1px solid rgba(2,6,23,0.04);
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.02);
+  }
+
+  /* booking cards (positioned via grid-row & grid-column inline) */
+  .card {
+    padding:10px;
+    color:white;
+    font-weight:600;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    font-size:13px;
+    line-height:1.1;
+  }
+  .card .title { font-size:14px; }
+  .card .meta { font-size:11px; opacity:0.95; }
+
+  .primary { background: linear-gradient(180deg,var(--primary), #1b4fd4); }
+  .secondary { background: linear-gradient(180deg,var(--secondary), #0e9e6f); }
+  .alert { background: linear-gradient(180deg,var(--alert), #b91c1c); }
+
+  /* small preview of original screenshot */
+  .screenshot {
+    width:100%;
+    display:block;
+    border-top:1px solid rgba(2,6,23,0.03);
+  }
+
+  /* responsive tweak */
+  @media (max-width:420px){
+    .phone{ width:360px; }
+  }
+
+  /* helper: visually place cards by grid coords (examples below in markup) */
+</style>
+</head>
+<body>
+  <div class="phone" role="region" aria-label="Preview orar">
+    <div class="header">
+      <div class="left">
+        <div class="app-title">Vineri - 21/11/2025</div>
+      </div>
+      <div class="date">⌚ 09:00</div>
+    </div>
+
+    <div class="courts-bar">
+      <div class="court">Teren 1</div>
+      <div class="court">Teren 2</div>
+      <div class="court">Teren 3</div>
+      <div class="court">Teren 4</div>
+    </div>
+
+    <div class="schedule">
+
+      <!-- hours column -->
+      <div class="hours" aria-hidden="true">
+        <div class="hour">8:00</div>
+        <div class="hour">9:00</div>
+        <div class="hour">10:00</div>
+        <div class="hour">11:00</div>
+        <div class="hour">12:00</div>
+        <div class="hour">13:00</div>
+        <div class="hour">14:00</div>
+        <div class="hour">15:00</div>
+        <div class="hour">16:00</div>
+        <div class="hour">17:00</div>
+        <div class="hour">18:00</div>
+        <div class="hour">19:00</div>
+        <div class="hour">20:00</div>
+      </div>
+
+      <!-- grid -->
+      <div class="grid-wrap">
+        <div class="grid" aria-hidden="false">
+          <!-- background cells (for visual grid) -->
+          <!-- generate 4 cols x 13 rows as empty cells -->
+          <!-- We'll place visible cards on top using grid-area -->
+          <!-- Use many cells to create background -->
+          <!-- NOTE: these are decorative; real app would generate dynamically -->
+          <!-- Add 52 cells -->
+          <script type="text/template">
+            <!-- decorative -->
+          </script>
+
+          <!-- I'll include the 52 cells inline for simplicity -->
+          <!-- Row 1 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:1;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:1;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:1;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:1;"></div>
+          <!-- Row 2 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:2;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:2;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:2;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:2;"></div>
+          <!-- Row 3 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:3;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:3;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:3;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:3;"></div>
+          <!-- Row 4 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:4;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:4;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:4;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:4;"></div>
+          <!-- Row 5 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:5;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:5;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:5;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:5;"></div>
+          <!-- Row 6 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:6;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:6;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:6;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:6;"></div>
+          <!-- Row 7 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:7;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:7;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:7;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:7;"></div>
+          <!-- Row 8 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:8;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:8;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:8;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:8;"></div>
+          <!-- Row 9 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:9;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:9;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:9;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:9;"></div>
+          <!-- Row 10 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:10;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:10;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:10;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:10;"></div>
+          <!-- Row 11 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:11;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:11;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:11;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:11;"></div>
+          <!-- Row 12 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:12;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:12;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:12;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:12;"></div>
+          <!-- Row 13 -->
+          <div class="grid-cell" style="grid-column:1; grid-row:13;"></div>
+          <div class="grid-cell" style="grid-column:2; grid-row:13;"></div>
+          <div class="grid-cell" style="grid-column:3; grid-row:13;"></div>
+          <div class="grid-cell" style="grid-column:4; grid-row:13;"></div>
+
+          <!-- Example booking cards (use grid-row start / end to span hours) -->
+          <!-- 9:00 - 10:00 on Teren 1 -->
+          <div class="card primary" style="grid-column:1; grid-row:2 / span 2;">
+            <div class="title">Player A</div>
+            <div class="meta">09:00 – 10:00</div>
+          </div>
+
+          <!-- 9:00 - 10:00 on Teren 2 (short pill style spanning 1 row) -->
+          <div class="card primary" style="grid-column:2; grid-row:2 / span 1;">
+            <div class="title">Club FT</div>
+            <div class="meta">09:00 – 09:30</div>
+          </div>
+
+          <!-- 16:00 - 18:00 on Teren 1 (2h) -->
+          <div class="card primary" style="grid-column:1; grid-row:10 / span 3;">
+            <div class="title">Training</div>
+            <div class="meta">16:00 – 18:00</div>
+          </div>
+
+          <!-- 17:00 - 18:00 on Teren 2 -->
+          <div class="card primary" style="grid-column:2; grid-row:11 / span 2;">
+            <div class="title">Player B</div>
+            <div class="meta">17:00 – 18:00</div>
+          </div>
+
+          <!-- 18:00 - 20:00 on Teren 1 individual (alert style) -->
+          <div class="card alert" style="grid-column:1; grid-row:11 / span 4;">
+            <div class="title">Rezervare Individuală</div>
+            <div class="meta">18:00 – 20:00</div>
+          </div>
+
+          <!-- 18:00 - 19:00 on Teren 3 (secondary) -->
+          <div class="card secondary" style="grid-column:3; grid-row:11 / span 2;">
+            <div class="title">Course</div>
+            <div class="meta">18:00 – 19:00</div>
+          </div>
+
+          <!-- 18:00 - 19:00 on Teren 4 (primary) -->
+          <div class="card primary" style="grid-column:4; grid-row:11 / span 2;">
+            <div class="title">Alex O.</div>
+            <div class="meta">18:00 – 19:00</div>
+          </div>
+
+        </div> <!-- .grid -->
+      </div> <!-- .grid-wrap -->
+    </div> <!-- .schedule -->
+
+    <!-- Original screenshot reference -->
+    <img class="screenshot" src="/mnt/data/5A499C2D-3327-480B-A842-C051280E2F35.jpeg" alt="Original screenshot reference">
+  </div>
+</body>
+</html>

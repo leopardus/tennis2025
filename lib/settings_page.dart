@@ -171,10 +171,40 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
                 },
               ),
+              const Divider(),
+              _buildCourtNumberSettingTile(
+                label: 'Numar terenuri',
+                currentValue: theme.numberOfCourts,
+                onChanged: (newValue) {
+                  if (newValue != null) {
+                    theme.updateNumberOfCourts(newValue);
+                  }
+                },
+              ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCourtNumberSettingTile({
+    required String label,
+    required int currentValue,
+    required ValueChanged<int?> onChanged,
+  }) {
+    return ListTile(
+      title: Text(label),
+      trailing: DropdownButton<int>(
+        value: currentValue,
+        items: [2, 3, 4, 5].map((int value) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: Text(value.toString()),
+          );
+        }).toList(),
+        onChanged: onChanged,
+      ),
     );
   }
 
